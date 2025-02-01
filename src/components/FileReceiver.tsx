@@ -7,7 +7,7 @@ interface FileReceiverProps {
 
 const FileReceiver: React.FC<FileReceiverProps> = ({ peer }) => {
   const [receivedFile, setReceivedFile] = useState<Blob | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null); // Store the filename
+  const [fileName, setFileName] = useState<string | null>(null);
 
   useEffect(() => {
     const handleData = (data: unknown) => {
@@ -22,9 +22,9 @@ const FileReceiver: React.FC<FileReceiverProps> = ({ peer }) => {
         const name = data.name as string;
 
         if (fileData instanceof Uint8Array) {
-          const blob = new Blob([fileData]); // No need to specify type here, browser will infer from data
+          const blob = new Blob([fileData]);
           setReceivedFile(blob);
-          name && setFileName(name); // Set the filename
+          name && setFileName(name);
         }
       }
     };
@@ -40,11 +40,10 @@ const FileReceiver: React.FC<FileReceiverProps> = ({ peer }) => {
 
   const downloadFile = () => {
     if (receivedFile && fileName) {
-      // Use fileName here
       const url = URL.createObjectURL(receivedFile);
       const a = document.createElement("a");
       a.href = url;
-      a.download = fileName; // Use the received filename
+      a.download = fileName;
       a.click();
       URL.revokeObjectURL(url);
     }

@@ -1,4 +1,3 @@
-// src/components/FileSender.tsx
 import React, { useRef } from "react";
 import Peer from "peerjs";
 
@@ -16,15 +15,13 @@ const FileSender: React.FC<FileSenderProps> = ({ peer }) => {
       reader.onload = () => {
         const arrayBuffer = reader.result as ArrayBuffer;
 
-        // Convert ArrayBuffer to Uint8Array
         const uint8Array = new Uint8Array(arrayBuffer);
 
         const fileDataToSend = {
           file: uint8Array,
-          name: file.name, // Add the filename
+          name: file.name,
         };
 
-        // Get the active connection (assuming only one connection for simplicity)
         const connections = peer.connections;
         const conn = Object.values(connections)[0]?.[0];
 
