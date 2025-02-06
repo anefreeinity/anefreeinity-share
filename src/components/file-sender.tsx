@@ -35,19 +35,9 @@ const FileSender: React.FC<IFileSenderProps> = ({
     }
   };
 
-  const sanitizeFileName = (fileName: string) => {
-    const lastDotIndex = fileName.lastIndexOf(".");
-    if (lastDotIndex === -1) return fileName;
-    const namePart = fileName.slice(0, lastDotIndex).replace(/\./g, "_");
-    const extension = fileName.slice(lastDotIndex);
-    return namePart + extension;
-  };
-
   const sendFile = async (file: File) => {
     setIsSending(true);
     setProgress(0);
-
-    const sanitizedFileName = sanitizeFileName(file.name);
 
     const reader = new FileReader();
     let offset = 0;
@@ -69,7 +59,7 @@ const FileSender: React.FC<IFileSenderProps> = ({
 
       connection.send({
         fileChunk: uint8Array,
-        name: sanitizedFileName,
+        name: file.name,
         size: file.size,
         chunkIndex: Math.floor(offset / CHUNK_SIZE),
         totalChunks: totalChunks,
@@ -85,6 +75,7 @@ const FileSender: React.FC<IFileSenderProps> = ({
       start: true,
       name: file.name,
       size: file.size,
+      type: file.type,
       totalChunks,
     });
     sendChunk();
@@ -123,9 +114,7 @@ const FileSender: React.FC<IFileSenderProps> = ({
 
       {selectedFile && (
         <div className="mt-4 p-3 bg-gray-800 rounded-lg">
-          <p className="text-gray-300 text-sm">
-            📁 {sanitizeFileName(selectedFile.name)}
-          </p>
+          <p className="text-gray-300 text-sm">📁 {selectedFile.name}</p>
           <p className="text-gray-400 text-xs">
             {formatFileSize(selectedFile.size)}
           </p>

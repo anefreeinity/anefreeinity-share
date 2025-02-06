@@ -17,6 +17,7 @@ const FileReceiver: React.FC<IFileReceiverProps> = ({
   const [totalChunks, setTotalChunks] = useState<number>(0);
   const [receivedChunksCount, setReceivedChunksCount] = useState<number>(0);
   const [fileBlob, setFileBlob] = useState<Blob | null>(null);
+  let fileType = "";
 
   useEffect(() => {
     const handleData = (data: any) => {
@@ -29,6 +30,7 @@ const FileReceiver: React.FC<IFileReceiverProps> = ({
         setReceivedChunksCount(0);
         setProgress(0);
         setFileBlob(null);
+        fileType = data.type;
       } else if (data.fileChunk) {
         setReceivedChunks((prevChunks) => [...prevChunks, data.fileChunk]);
         setReceivedChunksCount((prevCount) => {
@@ -38,7 +40,9 @@ const FileReceiver: React.FC<IFileReceiverProps> = ({
         });
 
         if (receivedChunksCount + 1 === totalChunks) {
-          const completeFile = new Blob([...receivedChunks]);
+          const completeFile = new Blob([...receivedChunks], {
+            type: fileType,
+          });
           setFileBlob(completeFile);
         }
       }
